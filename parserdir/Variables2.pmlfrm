@@ -1,6 +1,0 @@
-  !defaultText = !file.readfile()
-  !start = !defaultText.findfirst('-- Section 3') + 1
-  !end   = !defaultText.findfirst('-- End Section 3')
-  !range = !end - !start
-  !lines = !defaultText.from(!start,!range)
-  !symbNames = ARRAY()

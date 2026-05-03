@@ -1,4 +1,0 @@
-DO !loopCounter FROM 1 to 10
-    !value = !loopCounter *2
-    q var !loopCounter !value
-ENDDO

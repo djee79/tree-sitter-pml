@@ -51,3 +51,10 @@ zig-out/
 
 # Grammar regeneration cache (some versions)
 .tree-sitter-cache/
+
+# Backups and archives
+*.bak
+*.7z
+*.zip
+*.tar.gz
+parserdir/

@@ -1,8 +1,0 @@
-define function !!Area( !Length is REAL, !Width is REAL ) is REAL
-    !Area = !Length * !Width
-    return !Area
-endfunction
-
-define method .FullDesc() is STRING
-    return !this.Type & ' ' & !this.Material
-endmethod
