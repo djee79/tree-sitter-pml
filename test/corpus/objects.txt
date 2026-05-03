@@ -1,0 +1,77 @@
+==================
+Empty object definition
+==================
+
+DEFINE OBJECT MYOBJECT
+ENDOBJECT
+
+---
+
+(source_file
+  (object_definition
+    (keyword_define)
+    (keyword_object)
+    (identifier)
+    (keyword_endobject)))
+
+==================
+Object with members
+==================
+
+DEFINE OBJECT PERSON
+  MEMBER .Name IS STRING
+  MEMBER .Age IS REAL
+ENDOBJECT
+
+---
+
+(source_file
+  (object_definition
+    (keyword_define)
+    (keyword_object)
+    (identifier)
+    (member_definition
+      (keyword_member)
+      (member_name)
+      (keyword_is)
+      (type_identifier))
+    (member_definition
+      (keyword_member)
+      (member_name)
+      (keyword_is)
+      (type_identifier))
+    (keyword_endobject)))
+
+==================
+Object with multiple members
+==================
+
+DEFINE OBJECT POINT
+  MEMBER .X IS REAL
+  MEMBER .Y IS REAL
+  MEMBER .Z IS REAL
+ENDOBJECT
+
+---
+
+(source_file
+  (object_definition
+    (keyword_define)
+    (keyword_object)
+    (identifier)
+    (member_definition
+      (keyword_member)
+      (member_name)
+      (keyword_is)
+      (type_identifier))
+    (member_definition
+      (keyword_member)
+      (member_name)
+      (keyword_is)
+      (type_identifier))
+    (member_definition
+      (keyword_member)
+      (member_name)
+      (keyword_is)
+      (type_identifier))
+    (keyword_endobject)))

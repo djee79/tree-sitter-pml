@@ -1,0 +1,124 @@
+==================
+Local variable assignment
+==================
+
+!x = 10
+
+---
+
+(source_file
+  (assignment
+    (variable)
+    (expression
+      (number))))
+
+==================
+Global variable assignment
+==================
+
+!!global = 20
+
+---
+
+(source_file
+  (assignment
+    (variable)
+    (expression
+      (number))))
+
+==================
+Simple function call
+==================
+
+!!GetTime()
+
+---
+
+(source_file
+  (expression_statement
+    (expression
+      (function_call
+        function: (variable)
+        (argument_list)))))
+
+==================
+Function call with arguments
+==================
+
+!!Add(!a, !b)
+
+---
+
+(source_file
+  (expression_statement
+    (expression
+      (function_call
+        function: (variable)
+        (argument_list
+          (expression
+            (variable))
+          (expression
+            (variable)))))))
+
+==================
+Arithmetic expression assignment
+==================
+
+!result = 5 + 3
+
+---
+
+(source_file
+  (assignment
+    (variable)
+    (expression
+      (binary_expression
+        (expression
+          (number))
+        (expression
+          (number))))))
+
+==================
+Dereferenced local variable
+==================
+
+!x = $!myVar
+
+---
+
+(source_file
+  (assignment
+    (variable)
+    (expression
+      (variable))))
+
+==================
+Dereferenced global variable
+==================
+
+!x = $!!myGlobal
+
+---
+
+(source_file
+  (assignment
+    (variable)
+    (expression
+      (variable))))
+
+==================
+Dereferenced variable in index access
+==================
+
+!x = $!arr[1]
+
+---
+
+(source_file
+  (assignment
+    (variable)
+    (expression
+      (index_access
+        (variable)
+        (expression
+          (number))))))

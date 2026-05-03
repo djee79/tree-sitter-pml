@@ -1,0 +1,40 @@
+==================
+Single line comment
+==================
+
+-- This is a comment
+
+---
+
+(source_file
+  (comment))
+
+==================
+Comment after code
+==================
+
+!x = 5 -- Assign value
+
+---
+
+(source_file
+  (assignment
+    (variable)
+    (expression
+      (number)))
+  (comment))
+
+==================
+Multiple comments
+==================
+
+-- First comment
+-- Second comment
+-- Third comment
+
+---
+
+(source_file
+  (comment)
+  (comment)
+  (comment))

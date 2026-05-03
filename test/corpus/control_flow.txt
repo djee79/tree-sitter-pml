@@ -1,0 +1,328 @@
+==================
+Simple if statement
+==================
+
+if !x eq 5 then
+  !y = 10
+endif
+
+---
+
+(source_file
+  (if_statement
+    (keyword_if)
+    (expression
+      (comparison_expression
+        (expression
+          (variable))
+        (keyword_eq)
+        (expression
+          (number))))
+    (keyword_then)
+    (assignment
+      (variable)
+      (expression
+        (number)))
+    (keyword_endif)))
+
+==================
+If-else statement
+==================
+
+if !x eq 5 then
+  !y = 10
+else
+  !y = 20
+endif
+
+---
+
+(source_file
+  (if_statement
+    (keyword_if)
+    (expression
+      (comparison_expression
+        (expression
+          (variable))
+        (keyword_eq)
+        (expression
+          (number))))
+    (keyword_then)
+    (assignment
+      (variable)
+      (expression
+        (number)))
+    (keyword_else)
+    (assignment
+      (variable)
+      (expression
+        (number)))
+    (keyword_endif)))
+
+==================
+If-elseif-else statement
+==================
+
+if !x eq 5 then
+  !y = 10
+elseif !x eq 10 then
+  !y = 20
+else
+  !y = 30
+endif
+
+---
+
+(source_file
+  (if_statement
+    (keyword_if)
+    (expression
+      (comparison_expression
+        (expression
+          (variable))
+        (keyword_eq)
+        (expression
+          (number))))
+    (keyword_then)
+    (assignment
+      (variable)
+      (expression
+        (number)))
+    (keyword_elseif)
+    (expression
+      (comparison_expression
+        (expression
+          (variable))
+        (keyword_eq)
+        (expression
+          (number))))
+    (keyword_then)
+    (assignment
+      (variable)
+      (expression
+        (number)))
+    (keyword_else)
+    (assignment
+      (variable)
+      (expression
+        (number)))
+    (keyword_endif)))
+
+==================
+Simple do loop
+==================
+
+do !i from 1 to 10
+  !sum = !sum + !i
+enddo
+
+---
+
+(source_file
+  (do_loop
+    (keyword_do)
+    (variable)
+    (keyword_from)
+    (expression
+      (number))
+    (keyword_to)
+    (expression
+      (number))
+    (assignment
+      (variable)
+      (expression
+        (binary_expression
+          (expression
+            (variable))
+          (expression
+            (variable)))))
+    (keyword_enddo)))
+
+==================
+Do loop with by clause
+==================
+
+do !i from 1 to 100 by 10
+  !sum = !sum + !i
+enddo
+
+---
+
+(source_file
+  (do_loop
+    (keyword_do)
+    (variable)
+    (keyword_from)
+    (expression
+      (number))
+    (keyword_to)
+    (expression
+      (number))
+    (keyword_by)
+    (expression
+      (number))
+    (assignment
+      (variable)
+      (expression
+        (binary_expression
+          (expression
+            (variable))
+          (expression
+            (variable)))))
+    (keyword_enddo)))
+
+==================
+Do loop val form
+==================
+
+do !item val !myArray
+  !x = !item
+enddo
+
+---
+
+(source_file
+  (do_loop
+    (keyword_do)
+    (variable)
+    (keyword_val)
+    (expression
+      (variable))
+    (assignment
+      (variable)
+      (expression
+        (variable)))
+    (keyword_enddo)))
+
+==================
+Do loop value form
+==================
+
+do !item value !myArray
+  !x = !item
+enddo
+
+---
+
+(source_file
+  (do_loop
+    (keyword_do)
+    (variable)
+    (keyword_value)
+    (expression
+      (variable))
+    (assignment
+      (variable)
+      (expression
+        (variable)))
+    (keyword_enddo)))
+
+==================
+Handle with error code
+==================
+
+handle (2,751)
+  !x = 1
+endhandle
+
+---
+
+(source_file
+  (handle_statement
+    (keyword_handle)
+    (expression
+      (number))
+    (expression
+      (number))
+    (assignment
+      (variable)
+      (expression
+        (number)))
+    (keyword_endhandle)))
+
+==================
+Handle with elsehandle none
+==================
+
+handle (2,873)
+  skip
+elsehandle none
+  !x = 1
+endhandle
+
+---
+
+(source_file
+  (handle_statement
+    (keyword_handle)
+    (expression
+      (number))
+    (expression
+      (number))
+    (skip_statement
+      (keyword_skip))
+    (keyword_elsehandle)
+    (keyword_none)
+    (assignment
+      (variable)
+      (expression
+        (number)))
+    (keyword_endhandle)))
+
+==================
+Bare skip statement
+==================
+
+do !i from 1 to 10
+  skip
+enddo
+
+---
+
+(source_file
+  (do_loop
+    (keyword_do)
+    (variable)
+    (keyword_from)
+    (expression
+      (number))
+    (keyword_to)
+    (expression
+      (number))
+    (skip_statement
+      (keyword_skip))
+    (keyword_enddo)))
+
+==================
+Skip if statement
+==================
+
+do !i from 1 to 10
+  skip if (!i eq 5)
+enddo
+
+---
+
+(source_file
+  (do_loop
+    (keyword_do)
+    (variable)
+    (keyword_from)
+    (expression
+      (number))
+    (keyword_to)
+    (expression
+      (number))
+    (skip_statement
+      (keyword_skip)
+      (keyword_if)
+      (expression
+        (parenthesized_expression
+          (expression
+            (comparison_expression
+              (expression
+                (variable))
+              (keyword_eq)
+              (expression
+                (number)))))))
+    (keyword_enddo)))

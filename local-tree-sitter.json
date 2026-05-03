@@ -1,0 +1,8 @@
+{
+  "name": "pml",
+  "scope": "source.pml",
+  "file-types": ["pml", "pmlfnc", "pmlobj", "pmlfrm"],
+  "highlights": "queries/highlights.scm",
+  "injections": "queries/injections.scm"
+}
+

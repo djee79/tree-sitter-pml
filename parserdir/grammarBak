@@ -1,0 +1,239 @@
+
+/**
+ * @file Parser for the AVEVA Programmable macro language (PML)
+ */
+
+/// <reference types="tree-sitter-cli/dsl" />
+// @ts-check
+
+module.exports = grammar({
+  name: "pml",
+
+  extras: $ => [
+    /[ \t]/,     // whitespace
+    /\r?\n/,     // NEW: newline as whitespace
+    /--.*/,      // comments
+  ],
+
+  rules: {
+    source_file: $ => repeat(choice(
+      $._definition,
+      $._statement
+    )),
+
+    keyword_function: _ => token('function'),
+    keyword_define: _ => token('define'),
+    keyword_method: _ => token('method'),
+    keyword_endmethod: _ => token('endmethod'),
+    keyword_is: _ => token('is'),
+    keyword_return: _ => token('return'),
+    keyword_member: _ => token('member'),
+    keyword_object: _ => token('object'),
+    keyword_endobject: _ => token('endobject'),
+    keyword_endfunction: _ => token('endfunction'),
+    keyword_handle: _ => token('handle'),
+    keyword_any: _ => token(/ANY/i),
+    keyword_endhandle: _ => token('endhandle'),
+
+    _definition: $ => choice(
+      $.function_definition,
+      $.object_definition,
+      $.method_definition
+    ),
+//============== Function definition ==================
+    function_definition: $ => seq(
+      $.keyword_define,
+      $.keyword_function,
+      $.macro_function,
+      $.argument_list,
+      $.keyword_is,
+      $.identifier,
+      repeat($._statement),
+      $.keyword_endfunction
+    ),
+//============== Object definition ==================
+    object_definition: $ => seq(
+      $.keyword_define,
+      $.keyword_object,
+      $.identifier,           // "ELEMENT"
+      repeat($.member_definition),
+      $.keyword_endobject
+    ),
+//============== Method definition ==================
+    method_definition: $ => seq(
+      $.keyword_define,
+      $.keyword_method,
+      $.method_identifier,
+      $.argument_list,
+      $.keyword_is,
+      $.type_identifier,
+      repeat($._statement),
+      $.keyword_endmethod
+    ),
+//=============== end definition ====================
+    member_definition: $ => seq(
+      $.keyword_member,
+      $.member_name,          // ".Type"
+      $.keyword_is,
+      $.type_identifier       // STRING, REAL, etc.
+    ),
+
+    method_call: $ => prec.left(7, seq(
+      $.expression,
+      '.',
+      $.identifier,
+      $.argument_list
+    )),
+
+    method_identifier: _ =>
+      token(seq('.', /[A-Za-z_][A-Za-z0-9_]*/)),
+
+    member_name: _ =>
+      token(seq('.', /[A-Za-z_][A-Za-z0-9_]*/)),
+
+
+
+      argument_list: $ => seq(
+        '(',
+       optional(commaSep($.expression)),
+      ')'
+    ),
+
+    // EX: !Length is REAL
+    parameter: $ => seq(
+      $.variable,
+      $.keyword_is,
+      $.type_identifier
+    ),
+
+    builtin_type: _ =>
+      /[A-Za-z_][A-Za-z0-9_]*/,
+
+    _statement: $ => choice(
+      $.assignment,
+      $.pml1_command,
+      $.expression_statement,
+      $.return_statement,
+      $.handle_statement
+    ),
+
+
+    handle_statement: $ => seq(
+      $.keyword_handle,
+      choice(
+        seq('(', commaSep($.expression), ')'),   // handle (2,751)
+        $.keyword_any                            // handle ANY
+      ),
+      repeat($._statement),
+      $.keyword_endhandle
+    ),
+
+    assignment: $ => seq(
+      choice($.variable, $.index_access),
+      '=',
+      $.expression
+    ),
+
+    return_statement: $ => seq(
+      $.keyword_return,
+      $.expression
+    ),
+
+    expression: $ => choice(
+      $.method_call,
+      $.function_call,
+      $.index_access,
+      $.member_access,   // keep after method_call
+      $.variable,
+      $.number,
+      $.string_literal,
+      $.parenthesized_expression,
+      $.binary_expression
+    ),
+
+
+    function_call: $ => choice(
+      seq($.macro_function, $.argument_list),  // !!Area(...)
+      seq($.identifier, $.argument_list)       // file(), NAME(), etc.
+    ),
+
+    expression_statement: $ => $.expression,
+
+
+    binary_expression: $ => prec.left(5, seq(
+      $.expression,
+      choice('+', '-', '*', '/', '&'),
+      $.expression
+    )),
+
+    number: _ => /-?[0-9]+(\.[0-9]+)?/,
+
+    // EX: !Length, !Width
+    variable: _ => token(choice(
+      seq('!!', /[A-Za-z_][A-Za-z0-9_]*/),  // system vars
+      seq('!', /[A-Za-z_][A-Za-z0-9_]*/)    // normal vars
+    )),
+    
+    macro_function: $ => token(seq('!!', /[A-Za-z_][A-Za-z0-9_]*/)),
+    
+    identifier: _ => token(prec(-1, /[A-Za-z_][A-Za-z0-9_]*/)),
+
+    index_access: $ => prec.left(7, seq(
+      $.variable,
+      repeat1(seq('[', $.expression, ']'))
+    )),
+
+    member_access: $ => prec.left(6, seq(
+      $.expression,
+      '.',
+      $.identifier
+    )),
+
+    string_literal: _ => token(choice(
+      // ASCII quoted strings with doubled '' escape
+      seq("'", repeat(choice(/[^']/, "''")), "'"),
+
+      // Unicode quote variant: ‘ … ’
+      seq("‘", repeat(choice(/[^’]/, "’’")), "’"),
+
+      // Pipe strings: | … |
+      seq("|", repeat(choice(/[^|]/, "\\|")), "|")   
+    )),
+
+
+    parenthesized_expression: $ => seq(
+      '(',
+      $.expression,
+      ')'
+    ),
+
+    boolean_literal: _ => token(choice('TRUE', 'FALSE')),
+
+    type_identifier: _ =>
+      token(choice('REAL', 'STRING', 'BOOLEAN', 'ARRAY')),
+
+    pml1_command: $ => seq(
+      '$',
+      /[A-Za-z]/,
+      repeat(choice($.string_literal, $.variable, $.number))
+    )
+
+
+
+
+
+
+
+
+  },// End of Rules
+
+  conflicts: $ => [
+    [$.pml1_command, $.expression],
+  ],
+
+});
+
+// Utility
+function commaSep(rule) {
+  return seq(rule, repeat(seq(',', rule)));
+}

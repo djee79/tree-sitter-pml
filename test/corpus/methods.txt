@@ -1,0 +1,56 @@
+==================
+Simple method with no parameters
+==================
+
+define method .m1()
+endmethod
+
+---
+
+(source_file
+  (method_definition
+    (keyword_define)
+    (keyword_method)
+    (method_identifier)
+    (parameter_list)
+    (keyword_endmethod)))
+
+==================
+Method with parameters
+==================
+
+define method .m2(!x is STRING)
+endmethod
+
+---
+
+(source_file
+  (method_definition
+    (keyword_define)
+    (keyword_method)
+    (method_identifier)
+    (parameter_list
+      (parameter
+        (variable)
+        (keyword_is)
+        (type_identifier)))
+    (keyword_endmethod)))
+
+==================
+Method with return type
+==================
+
+define method .m3() is REAL
+endmethod
+
+---
+
+(source_file
+  (method_definition
+    (keyword_define)
+    (keyword_method)
+    (method_identifier)
+    (parameter_list)
+    (keyword_is)
+    (type_identifier)
+    (keyword_endmethod)))

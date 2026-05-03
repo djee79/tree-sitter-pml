@@ -1,0 +1,255 @@
+==================
+Addition
+==================
+
+!result = !a + !b
+
+---
+
+(source_file
+  (assignment
+    (variable)
+    (expression
+      (binary_expression
+        (expression
+          (variable))
+        (expression
+          (variable))))))
+
+==================
+Subtraction
+==================
+
+!result = !a - !b
+
+---
+
+(source_file
+  (assignment
+    (variable)
+    (expression
+      (binary_expression
+        (expression
+          (variable))
+        (expression
+          (variable))))))
+
+==================
+Multiplication
+==================
+
+!result = !a * !b
+
+---
+
+(source_file
+  (assignment
+    (variable)
+    (expression
+      (binary_expression
+        (expression
+          (variable))
+        (expression
+          (variable))))))
+
+==================
+Division
+==================
+
+!result = !a / !b
+
+---
+
+(source_file
+  (assignment
+    (variable)
+    (expression
+      (binary_expression
+        (expression
+          (variable))
+        (expression
+          (variable))))))
+
+==================
+String concatenation with &
+==================
+
+!result = !str1 & !str2
+
+---
+
+(source_file
+  (assignment
+    (variable)
+    (expression
+      (binary_expression
+        (expression
+          (variable))
+        (expression
+          (variable))))))
+
+==================
+Comparison with eq
+==================
+
+!result = !a eq !b
+
+---
+
+(source_file
+  (assignment
+    (variable)
+    (expression
+      (comparison_expression
+        (expression
+          (variable))
+        (keyword_eq)
+        (expression
+          (variable))))))
+
+==================
+Comparison with ne
+==================
+
+!result = !a ne !b
+
+---
+
+(source_file
+  (assignment
+    (variable)
+    (expression
+      (comparison_expression
+        (expression
+          (variable))
+        (keyword_ne)
+        (expression
+          (variable))))))
+
+==================
+Comparison with gt
+==================
+
+!result = !a gt !b
+
+---
+
+(source_file
+  (assignment
+    (variable)
+    (expression
+      (comparison_expression
+        (expression
+          (variable))
+        (keyword_gt)
+        (expression
+          (variable))))))
+
+==================
+Comparison with lt
+==================
+
+!result = !a lt !b
+
+---
+
+(source_file
+  (assignment
+    (variable)
+    (expression
+      (comparison_expression
+        (expression
+          (variable))
+        (keyword_lt)
+        (expression
+          (variable))))))
+
+==================
+Logical with and
+==================
+
+!result = !a and !b
+
+---
+
+(source_file
+  (assignment
+    (variable)
+    (expression
+      (logical_expression
+        (expression
+          (variable))
+        (keyword_and)
+        (expression
+          (variable))))))
+
+==================
+Logical with or
+==================
+
+!result = !a or !b
+
+---
+
+(source_file
+  (assignment
+    (variable)
+    (expression
+      (logical_expression
+        (expression
+          (variable))
+        (keyword_or)
+        (expression
+          (variable))))))
+
+==================
+Logical with not
+==================
+
+!result = not !x
+
+---
+
+(source_file
+  (assignment
+    (variable)
+    (expression
+      (logical_expression
+        (keyword_not)
+        (expression
+          (variable))))))
+
+==================
+Member access
+==================
+
+!val = !obj.property
+
+---
+
+(source_file
+  (assignment
+    (variable)
+    (expression
+      (member_access
+        (expression
+          (variable))
+        (identifier)))))
+
+==================
+Method call
+==================
+
+!result = !obj.method()
+
+---
+
+(source_file
+  (assignment
+    (variable)
+    (expression
+      (method_call
+        (expression
+          (variable))
+        (identifier)
+        (argument_list)))))

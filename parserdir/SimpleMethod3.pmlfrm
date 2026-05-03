@@ -1,0 +1,3 @@
+define method .FullDesc() is STRING
+    return !this.Type & ' ' & !this.Material
+endmethod

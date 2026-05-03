@@ -1,0 +1,4 @@
+define object ELEMENT
+    member .Type is STRING
+    member .Material is STRING
+endobject

@@ -1,0 +1,86 @@
+==================
+Var statement split form
+==================
+
+var !vlim split vlim
+
+---
+
+(source_file
+  (var_statement
+    (keyword_var)
+    (variable)
+    (identifier)
+    (identifier)))
+
+==================
+Var statement sort unique form
+==================
+
+var !sorted sort unique !myArray
+
+---
+
+(source_file
+  (var_statement
+    (keyword_var)
+    (variable)
+    (identifier)
+    (identifier)
+    (variable)))
+
+==================
+Var statement coll form with for clause
+==================
+
+var !result coll all SCTN for $!myRef
+
+---
+
+(source_file
+  (var_statement
+    (keyword_var)
+    (variable)
+    (identifier)
+    (identifier)
+    (identifier)
+    (identifier)
+    (variable)))
+
+==================
+Var statement coll with wi eq filter
+==================
+
+var !x coll all idli wi function eq 'keyplan' for $!ref
+
+---
+
+(source_file
+  (var_statement
+    (keyword_var)
+    (variable)
+    (identifier)
+    (identifier)
+    (identifier)
+    (identifier)
+    (keyword_function)
+    (keyword_eq)
+    (string_literal)
+    (identifier)
+    (variable)))
+
+==================
+Var statement of form
+==================
+
+var !pos shpo of $!startPos
+
+---
+
+(source_file
+  (var_statement
+    (keyword_var)
+    (variable)
+    (identifier)
+    (keyword_of)
+    (variable)))

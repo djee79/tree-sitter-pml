@@ -1,0 +1,29 @@
+define method .check(!flag is REAL)
+    if !flag.eq(0) then
+        if !this.step.val.eq(0) then
+            !this.step.val = 1
+        endif
+        elseif !flag.eq(1) or !flag.eq(2) then
+            if !this.maxi.val.unset() then
+            !this.maxi.val = !this.mini.val + !this.step.val
+        elseif !this.mini.val.unset() then
+            !this.mini.val = !this.maxi.val - !this.step.val
+        endif
+        if (!this.mini.val.lt(-273)) then
+            !this.mini.val = -273
+        if (!this.maxi.val.leq(!this.mini.val)) then
+            !this.maxi.val = -272
+        endif
+        elseif (!this.maxi.val.lt(-273)) then
+            !this.mini.val = -273
+            !this.maxi.val = -272
+        endif
+        if (!this.maxi.val.leq(!this.mini.val)) then
+            if !flag.eq(1) then
+                !this.maxi.val = !this.mini.val + !this.step.val
+            elseif !flag.eq(2) then
+                !this.mini.val = !this.maxi.val - !this.step.val
+            endif
+        endif
+    endif
+endmethod

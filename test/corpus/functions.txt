@@ -1,0 +1,161 @@
+==================
+Simple function with no parameters
+==================
+
+define function !f1() is STRING
+endfunction
+
+---
+
+(source_file
+  (function_definition
+    (keyword_define)
+    (keyword_function)
+    name: (macro_function)
+    (parameter_list)
+    (keyword_is)
+    (identifier)
+    (keyword_endfunction)))
+
+==================
+Function with one parameter
+==================
+
+define function !f2(!x is STRING) is STRING
+endfunction
+
+---
+
+(source_file
+  (function_definition
+    (keyword_define)
+    (keyword_function)
+    name: (macro_function)
+    (parameter_list
+      (parameter
+        (variable)
+        (keyword_is)
+        (type_identifier)))
+    (keyword_is)
+    (identifier)
+    (keyword_endfunction)))
+
+==================
+Function with two parameters
+==================
+
+define function !f3(!x is REAL, !y is REAL) is REAL
+endfunction
+
+---
+
+(source_file
+  (function_definition
+    (keyword_define)
+    (keyword_function)
+    name: (macro_function)
+    (parameter_list
+      (parameter
+        (variable)
+        (keyword_is)
+        (type_identifier))
+      (parameter
+        (variable)
+        (keyword_is)
+        (type_identifier)))
+    (keyword_is)
+    (identifier)
+    (keyword_endfunction)))
+
+==================
+Function with body containing assignment and return
+==================
+
+define function !add(!a is REAL, !b is REAL) is REAL
+  !result = !a + !b
+  return !result
+endfunction
+
+---
+
+(source_file
+  (function_definition
+    (keyword_define)
+    (keyword_function)
+    name: (macro_function)
+    (parameter_list
+      (parameter
+        (variable)
+        (keyword_is)
+        (type_identifier))
+      (parameter
+        (variable)
+        (keyword_is)
+        (type_identifier)))
+    (keyword_is)
+    (identifier)
+    (assignment
+      (variable)
+      (expression
+        (binary_expression
+          (expression
+            (variable))
+          (expression
+            (variable)))))
+    (return_statement
+      (keyword_return)
+      (expression
+        (variable)))
+    (keyword_endfunction)))
+
+==================
+Function without return type annotation
+==================
+
+define function !!myFunc(!arguments is ARRAY)
+  !x = 1
+endfunction
+
+---
+
+(source_file
+  (function_definition
+    (keyword_define)
+    (keyword_function)
+    name: (macro_function)
+    (parameter_list
+      (parameter
+        (variable)
+        (keyword_is)
+        (type_identifier)))
+    (assignment
+      (variable)
+      (expression
+        (number)))
+    (keyword_endfunction)))
+
+==================
+Function with bare return statement
+==================
+
+define function !earlyReturn(!x is REAL) is REAL
+  return
+endfunction
+
+---
+
+(source_file
+  (function_definition
+    (keyword_define)
+    (keyword_function)
+    name: (macro_function)
+    (parameter_list
+      (parameter
+        (variable)
+        (keyword_is)
+        (type_identifier)))
+    (keyword_is)
+    (identifier)
+    (return_statement
+      (keyword_return))
+    (keyword_endfunction)))

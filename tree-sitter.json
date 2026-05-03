@@ -1,0 +1,42 @@
+{
+  "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/config.schema.json",
+  "grammars": [
+    {
+      "name": "pml2",
+      "camelcase": "Pml2",
+      "title": "PML2",
+      "scope": "source.pml",
+      "file-types": [
+        "pml",
+        "pmlfnc",
+        "pmlobj",
+        "pmlfrm"
+      ],
+      "injection-regex": "^pml2?$",
+      "class-name": "TreeSitterPml2"
+    }
+  ],
+  "metadata": {
+    "version": "0.1.0",
+    "license": "MIT",
+    "description": "Parser for the AVEVA Programmable macro language (PML)",
+    "authors": [
+      {
+        "name": "Jean-Francois Nantel",
+        "email": "jnantelf@gmail.com"
+      }
+    ],
+    "links": {
+      "repository": "https://github.com/tree-sitter/tree-sitter-aveva_pml_parser"
+    }
+  },
+  "bindings": {
+    "c": true,
+    "go": true,
+    "node": true,
+    "python": true,
+    "rust": true,
+    "swift": true,
+    "zig": false
+  }
+}
