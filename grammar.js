@@ -464,7 +464,10 @@ module.exports = grammar({
       $._newline
     ),
 
-    output_text: _ => token(prec(-1, /[^\r\n$]+/)),
+    // Must not start with whitespace, so the lexer skips the blanks before
+    // it instead of folding them into the next token (`$P $!x` once lexed
+    // the variable as ` $!x`).
+    output_text: _ => token(prec(-1, /[^\r\n$ \t][^\r\n$]*/)),
 
     // `$$` literal dollar, `$<` / `$>` substitution delimiters, etc.
     dollar_escape: _ => token(/\$[^\r\n \t!]/),

@@ -357,3 +357,23 @@ ENDMETHOD
         (keyword_return))
       (keyword_endif))
     (keyword_endmethod)))
+
+================================================================================
+Output with variables directly after the directive
+================================================================================
+
+$P $!a $!!b
+$P   indented $!c more
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (output_statement
+    (output_directive)
+    (variable)
+    (variable))
+  (output_statement
+    (output_directive)
+    (output_text)
+    (variable)
+    (output_text)))
