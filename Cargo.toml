@@ -1,13 +1,13 @@
 [package]
-name = "tree-sitter-aveva-pml-parser"
-description = "Parser for the AVEVA Programmable macro language (PML)"
+name = "tree-sitter-pml"
+description = "Tree-sitter parser for AVEVA PML2 (Programmable Macro Language)"
 version = "0.1.0"
 authors = ["Jean-Francois Nantel <jnantelf@gmail.com>"]
 license = "MIT"
 readme = "README.md"
-keywords = ["incremental", "parsing", "tree-sitter", "aveva-pml-parser"]
+keywords = ["incremental", "parsing", "tree-sitter", "pml"]
 categories = ["parser-implementations", "parsing", "text-editors"]
-repository = "https://github.com/tree-sitter/tree-sitter-aveva_pml_parser"
+repository = "https://github.com/djee79/tree-sitter-pml"
 edition = "2021"
 autoexamples = false
 

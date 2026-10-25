@@ -1,7 +1,7 @@
 {
   "targets": [
     {
-      "target_name": "tree_sitter_aveva_pml_parser_binding",
+      "target_name": "tree_sitter_pml_binding",
       "dependencies": [
         "<!(node -p \"require('node-addon-api').targets\"):node_addon_api_except",
       ],

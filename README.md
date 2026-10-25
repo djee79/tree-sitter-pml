@@ -1,254 +1,158 @@
 # tree-sitter-pml
 
-A Tree-sitter parser for AVEVA PML2 (Programmable Macro Language 2).
+A [Tree-sitter](https://tree-sitter.github.io/tree-sitter/) parser for AVEVA PML2
+(Programmable Macro Language 2), the scripting language of AVEVA E3D, PDMS and
+Marine.
 
-## Overview
+It provides syntax highlighting, folding and scope queries for editors that
+support Tree-sitter, and a Rust crate used by `pml-lsp`.
 
-This parser provides full syntax analysis for AVEVA PML2, enabling syntax highlighting, code folding, and other editor features for PML files in editors that support Tree-sitter.
+## Supported constructs
 
-## Features
-
-### Supported PML Constructs
-
-- **Function Definitions**: `define function` with parameters and return types
-- **Method Definitions**: `define method` for object-oriented programming
-- **Object Definitions**: `define object` with member declarations
-- **Control Flow**:
-  - `if`/`elseif`/`else`/`endif` conditionals
-  - `do`/`from`/`to`/`by`/`enddo` loops
-  - `handle`/`endhandle` error handling
+- **Definitions**: `define function`, `define method`, `define object` with `member` declarations
+- **Control flow**: `if`/`elseif`/`else`/`endif`, `do`/`enddo` in all forms
+  (`from`/`to`/`by`, `index`, `values`, bare `do`), `break [if]`, `skip [if]`,
+  `label`/`golabel`, `exit`
+- **Error handling**: `handle (codes)`, `handle any`, `elsehandle any|none|(codes)`,
+  `return error [n] [|msg|]`
 - **Expressions**:
-  - Arithmetic operators: `+`, `-`, `*`, `/`
-  - String concatenation: `&`
-  - Comparison: `eq`, `ne`, `gt`, `lt`, `ge`, `le`
-  - Logical: `and`, `or`, `not`
-  - Member access: `.property`
-  - Method calls: `object.method()`
-  - Index access: `!array[index]`
-  - `of` expressions: `name of owner`
-- **Variables**:
-  - Local variables: `!varname`
-  - Global variables: `!!varname`
-- **Literals**:
-  - Numbers: `123`, `45.67`, `-10`
-  - Strings: `'single quotes'`, `|pipe delimiters|`
-  - Booleans: `TRUE`, `FALSE`
-- **Comments**: `-- comment text`
+  - Arithmetic `+ - * /` with correct precedence, unary `-`/`+`
+  - String concatenation `&`
+  - Comparison `eq ne gt lt ge le` and `== <> != > < >= <=`
+  - Logical `and or not`
+  - Postfix chains: `!a.b`, `!a.b()`, `!a[1]`, `!this.items[!i].name.upcase()`
+  - Object construction `object STRING()`, builtin constructors `ARRAY()`
+  - `name of owner`
+- **Variables**: `!local`, `!!global`, `$!deref`, `$!!deref`
+- **Literals**: numbers (`10`, `-1.5`, `.5`, `2e-4`), strings (`'...'` with `''`
+  escape, `|...|`), `TRUE`/`FALSE`
+- **Numbers with units**: `10mm`, `45deg`
+- **Comments**: `-- text` and `$* text`
+- **Line continuation**: trailing `$`
+- **Output**: `$P text $!var`
+- **Command sub-language**: any line starting with a bare word, a `$M`-style
+  directive or an element reference (`/PIPE-100`) parses as a
+  `command_statement` with its arguments kept as plain tokens. This covers
+  `q var !x`, `new equi /E1`, `setup form ... exit`, `pml reload form`, and so
+  on. `var !x ...` queries are handled the same way.
 
-## Installation
+The grammar is line-oriented: an external scanner (`src/scanner.c`) emits a
+newline token at the end of each logical line, so a syntax error never spreads
+past the line it is on.
 
-### NPM
+- **Forms**: `setup form` / `layout form` ... `exit` blocks, with nested
+  `frame`, `view`, `alpha view`, `menu` and `bar` blocks. Gadget lines inside
+  are commands. Forms and frames fold.
 
-```bash
-npm install tree-sitter-aveva-pml-parser
-```
+Not yet supported: single-line `if ... then ... endif`.
 
-### From Source
+## File extensions
 
-```bash
-git clone https://github.com/tree-sitter/tree-sitter-aveva_pml_parser
+`.pml`, `.pmlfnc`, `.pmlobj`, `.pmlfrm`, `.pmlmac`, `.pmlcmd`, `.mac`
+
+## Neovim (LazyVim / nvim-treesitter `main` branch)
+
+The simplest setup needs no nvim-treesitter registration at all: build the
+parser once, put it on the runtimepath, and symlink the queries.
+
+```sh
 cd tree-sitter-pml
-npm install
+tree-sitter build -o pml.so                      # pml.dll on Windows
+mkdir -p ~/.local/share/nvim/site/parser ~/.config/nvim/queries/pml
+ln -sfn "$PWD/pml.so" ~/.local/share/nvim/site/parser/pml.so
+for q in highlights locals folds injections; do
+  ln -sfn "$PWD/queries/$q.scm" ~/.config/nvim/queries/pml/$q.scm
+done
 ```
 
-## Building
-
-Generate the parser:
-
-```bash
-npx tree-sitter generate
-```
-
-Build the native module:
-
-```bash
-npx tree-sitter build
-```
-
-Test the parser:
-
-```bash
-npm test
-```
-
-## Usage
-
-### Node.js
-
-```javascript
-const Parser = require('tree-sitter');
-const PML = require('tree-sitter-aveva-pml-parser');
-
-const parser = new Parser();
-parser.setLanguage(PML);
-
-const sourceCode = `
-define function !!Area( !Length is REAL, !Width is REAL ) is REAL
-    !Area = !Length * !Width
-    return !Area
-endfunction
-`;
-
-const tree = parser.parse(sourceCode);
-console.log(tree.rootNode.toString());
-```
-
-### Tree-sitter CLI
-
-Test parsing in the playground:
-
-```bash
-npm start
-# or
-npx tree-sitter playground
-```
-
-Parse a file:
-
-```bash
-npx tree-sitter parse path/to/file.pml
-```
-
-## File Extensions
-
-This parser recognizes the following PML file extensions:
-
-- `.pml` - General PML files
-- `.pmlfnc` - PML function files
-- `.pmlobj` - PML object files
-- `.pmlfrm` - PML form files
-
-## Editor Integration
-
-### Neovim (with nvim-treesitter)
-
-Add to your Tree-sitter configuration:
+Then register the filetypes and the parser, e.g. in `lua/plugins/pml.lua`:
 
 ```lua
-local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
-parser_config.pml = {
-  install_info = {
-    url = "path/to/tree-sitter-pml",
-    files = {"src/parser.c"},
-    branch = "main",
+return {
+  {
+    "nvim-treesitter/nvim-treesitter",
+    init = function()
+      vim.filetype.add({
+        extension = {
+          pml = "pml", pmlfnc = "pml", pmlobj = "pml", pmlfrm = "pml",
+          pmlmac = "pml", pmlcmd = "pml", mac = "pml",
+        },
+      })
+      local ext = jit.os == "Windows" and "dll" or "so"
+      vim.treesitter.language.add("pml", {
+        path = vim.fn.stdpath("data") .. "/site/parser/pml." .. ext,
+      })
+    end,
   },
-  filetype = "pml",
 }
 ```
 
-### VS Code
+LazyVim starts highlighting automatically for any filetype whose parser is in
+`stdpath("data")/site/parser`. For folding, add in `after/ftplugin/pml.lua`:
 
-Use with the Tree-sitter extension or a PML language extension that supports Tree-sitter.
+```lua
+vim.wo.foldmethod = "expr"
+vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+```
 
-## Language Bindings
+Useful while testing: `:InspectTree` shows the syntax tree, `:Inspect` shows
+the captures under the cursor, `:checkhealth vim.treesitter` lists parsers.
 
-This parser includes bindings for:
+Alternatively, let nvim-treesitter build it: register
+`require("nvim-treesitter.parsers").pml = { install_info = { url = "https://github.com/djee79/tree-sitter-pml", files = { "src/parser.c", "src/scanner.c" }, branch = "main" } }`
+and run `:TSInstall pml`. The queries still need the symlinks above.
 
-- C
-- Node.js
-- Python
-- Rust
-- Go
-- Swift
+On Windows, `tree-sitter build` needs a C compiler (MSVC Build Tools, or
+`zig cc` via `CC=zig cc`). The `.dll` goes in
+`%LOCALAPPDATA%\nvim-data\site\parser\pml.dll`.
 
-## Example PML Code
+## Rust
 
-```pml
--- Define a function
-define function !!CalculateArea( !Length is REAL, !Width is REAL ) is REAL
-    !Result = !Length * !Width
-    return !Result
-endfunction
+```toml
+[dependencies]
+tree-sitter = "0.25"
+tree-sitter-pml = { git = "https://github.com/djee79/tree-sitter-pml" }
+```
 
--- Define a method
-define method .ShowDetails() is STRING
-    if !this.Visible eq TRUE then
-        return !this.Name & ' is visible'
-    else
-        return !this.Name & ' is hidden'
-    endif
-endmethod
-
--- Define an object
-define object RECTANGLE
-    member .Length is REAL
-    member .Width is REAL
-    member .Color is STRING
-endobject
-
--- Control flow
-do !i from 1 to 10 by 1
-    !square = !i * !i
-    if !square gt 50 then
-        return !square
-    endif
-enddo
-
--- Error handling
-handle any
-    !error = |An error occurred|
-    return FALSE
-endhandle
+```rust
+let mut parser = tree_sitter::Parser::new();
+parser.set_language(&tree_sitter_pml::LANGUAGE.into()).unwrap();
+let tree = parser.parse("!x = object STRING()", None).unwrap();
+// Queries are exported as tree_sitter_pml::HIGHLIGHTS_QUERY, LOCALS_QUERY, INJECTIONS_QUERY.
 ```
 
 ## Development
 
-### Project Structure
-
-```
-tree-sitter-pml/
-├── grammar.js          # Grammar definition
-├── src/               # Generated parser C code
-├── queries/           # Editor queries
-│   ├── highlights.scm # Syntax highlighting
-│   ├── folds.scm      # Code folding
-│   ├── locals.scm     # Local scope analysis
-│   └── injections.scm # Language injections
-├── test/              # Test corpus
-│   └── corpus/        # Test cases
-└── bindings/          # Language bindings
+```sh
+npm install                 # installs tree-sitter-cli
+npx tree-sitter generate    # regenerate src/ after editing grammar.js
+npx tree-sitter test        # run test/corpus and test/highlight
+npx tree-sitter parse file.pmlfnc
+npx tree-sitter highlight file.pmlfnc
 ```
 
-### Running Tests
+Rules:
 
-```bash
-npm test
+- Never hand-edit `src/`; it is generated. The one exception is
+  `src/scanner.c`, the hand-written external scanner.
+- Every new construct gets a test in `test/corpus/`; every new capture gets an
+  assertion in `test/highlight/basics.pml`.
+- `tree-sitter test --update` rewrites expected trees; review the diff before committing.
+- Bindings and build files are regenerated with `tree-sitter init --update`
+  from `tree-sitter.json`.
+
+### Layout
+
 ```
-
-Or with Tree-sitter CLI:
-
-```bash
-npx tree-sitter test
+grammar.js          grammar definition
+src/                generated parser (committed) + hand-written scanner.c
+queries/            highlights.scm, folds.scm, locals.scm, injections.scm
+test/corpus/        corpus tests, one file per topic
+test/highlight/     highlight assertions (exact capture names)
+.github/workflows/  CI: generate, check src/ is committed, test, cargo test
+bindings/           C, Go, Node, Python, Rust, Swift bindings
 ```
-
-### Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Add tests for new features
-4. Ensure all tests pass
-5. Submit a pull request
 
 ## License
 
-MIT License - see LICENSE file for details
-
-## Author
-
-Jean-Francois Nantel (jnantelf@gmail.com)
-
-## Resources
-
-- [Tree-sitter Documentation](https://tree-sitter.github.io/tree-sitter/)
-- [AVEVA PML Documentation](https://www.aveva.com/)
-
-## Changelog
-
-### 0.1.0 (Current)
-
-- Initial release
-- Full PML2 syntax support
-- Function, method, and object definitions
-- Control flow structures
-- Expression parsing
-- Comment support
+MIT, see LICENSE.

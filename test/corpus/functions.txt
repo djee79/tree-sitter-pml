@@ -14,7 +14,7 @@ endfunction
     name: (macro_function)
     (parameter_list)
     (keyword_is)
-    (identifier)
+    (type_identifier)
     (keyword_endfunction)))
 
 ==================
@@ -33,11 +33,11 @@ endfunction
     name: (macro_function)
     (parameter_list
       (parameter
-        (variable)
+        name: (variable)
         (keyword_is)
-        (type_identifier)))
+        type: (type_identifier)))
     (keyword_is)
-    (identifier)
+    (type_identifier)
     (keyword_endfunction)))
 
 ==================
@@ -56,15 +56,15 @@ endfunction
     name: (macro_function)
     (parameter_list
       (parameter
-        (variable)
+        name: (variable)
         (keyword_is)
-        (type_identifier))
+        type: (type_identifier))
       (parameter
-        (variable)
+        name: (variable)
         (keyword_is)
-        (type_identifier)))
+        type: (type_identifier)))
     (keyword_is)
-    (identifier)
+    (type_identifier)
     (keyword_endfunction)))
 
 ==================
@@ -85,18 +85,18 @@ endfunction
     name: (macro_function)
     (parameter_list
       (parameter
-        (variable)
+        name: (variable)
         (keyword_is)
-        (type_identifier))
+        type: (type_identifier))
       (parameter
-        (variable)
+        name: (variable)
         (keyword_is)
-        (type_identifier)))
+        type: (type_identifier)))
     (keyword_is)
-    (identifier)
+    (type_identifier)
     (assignment
-      (variable)
-      (expression
+      left: (variable)
+      right: (expression
         (binary_expression
           (expression
             (variable))
@@ -125,12 +125,12 @@ endfunction
     name: (macro_function)
     (parameter_list
       (parameter
-        (variable)
+        name: (variable)
         (keyword_is)
-        (type_identifier)))
+        type: (type_identifier)))
     (assignment
-      (variable)
-      (expression
+      left: (variable)
+      right: (expression
         (number)))
     (keyword_endfunction)))
 
@@ -151,11 +151,11 @@ endfunction
     name: (macro_function)
     (parameter_list
       (parameter
-        (variable)
+        name: (variable)
         (keyword_is)
-        (type_identifier)))
+        type: (type_identifier)))
     (keyword_is)
-    (identifier)
+    (type_identifier)
     (return_statement
       (keyword_return))
     (keyword_endfunction)))

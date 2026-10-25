@@ -1,0 +1,188 @@
+==================
+Object construction
+==================
+
+!x = object STRING()
+!arr = object ARRAY()
+
+---
+
+(source_file
+  (assignment
+    (variable)
+    (expression
+      (object_expression
+        (keyword_object)
+        (type_identifier)
+        (argument_list))))
+  (assignment
+    (variable)
+    (expression
+      (object_expression
+        (keyword_object)
+        (type_identifier)
+        (argument_list)))))
+
+==================
+Object construction with arguments
+==================
+
+!pt = object POSITION(1, 2, 3)
+
+---
+
+(source_file
+  (assignment
+    (variable)
+    (expression
+      (object_expression
+        (keyword_object)
+        (type_identifier)
+        (argument_list
+          (expression
+            (number))
+          (expression
+            (number))
+          (expression
+            (number)))))))
+
+==================
+Index on member access
+==================
+
+!x = !this.items[!i]
+
+---
+
+(source_file
+  (assignment
+    (variable)
+    (expression
+      (index_access
+        (expression
+          (member_access
+            (expression
+              (variable))
+            (identifier)))
+        (expression
+          (variable))))))
+
+==================
+Nested index access
+==================
+
+!x = !!arr[1][2]
+
+---
+
+(source_file
+  (assignment
+    (variable)
+    (expression
+      (index_access
+        (expression
+          (index_access
+            (expression
+              (variable))
+            (expression
+              (number))))
+        (expression
+          (number))))))
+
+==================
+Method call on index access
+==================
+
+!x = !arr[1].upcase()
+
+---
+
+(source_file
+  (assignment
+    (variable)
+    (expression
+      (method_call
+        (expression
+          (index_access
+            (expression
+              (variable))
+            (expression
+              (number))))
+        (identifier)
+        (argument_list)))))
+
+==================
+Index on method call result
+==================
+
+!x = !obj.list()[1]
+
+---
+
+(source_file
+  (assignment
+    (variable)
+    (expression
+      (index_access
+        (expression
+          (method_call
+            (expression
+              (variable))
+            (identifier)
+            (argument_list)))
+        (expression
+          (number))))))
+
+==================
+Long postfix chain
+==================
+
+!x = !a.b().c[1].d()
+
+---
+
+(source_file
+  (assignment
+    (variable)
+    (expression
+      (method_call
+        (expression
+          (index_access
+            (expression
+              (member_access
+                (expression
+                  (method_call
+                    (expression
+                      (variable))
+                    (identifier)
+                    (argument_list)))
+                (identifier)))
+            (expression
+              (number))))
+        (identifier)
+        (argument_list)))))
+
+==================
+Builtin constructor call
+==================
+
+!x = ARRAY()
+!y = STRING('hello')
+
+---
+
+(source_file
+  (assignment
+    (variable)
+    (expression
+      (function_call
+        (identifier)
+        (argument_list))))
+  (assignment
+    (variable)
+    (expression
+      (function_call
+        (identifier)
+        (argument_list
+          (expression
+            (string_literal)))))))

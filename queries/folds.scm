@@ -1,46 +1,13 @@
-; ===== Functions =====
-(function_definition
-  (keyword_function) @fold
-  (keyword_endfunction) @fold
-  (#set! role block))
+; Folds for AVEVA PML2.
+; Neovim folds the full range of each captured node.
 
-; ===== Methods =====
-(method_definition
-  (keyword_method) @fold
-  (keyword_endmethod) @fold
-  (#set! role block))
-
-; ===== Objects =====
-(object_definition
-  (keyword_object) @fold
-  (keyword_endobject) @fold
-  (#set! role block))
-
-; ===== Control Flow =====
-(if_statement
-  (keyword_if) @fold
-  (keyword_endif) @fold
-  (#set! role block))
-
-(do_loop
-  (keyword_do) @fold
-  (keyword_enddo) @fold
-  (#set! role block))
-
-; ===== Error Handling =====
-(handle_statement
-  (keyword_handle) @fold
-  (keyword_endhandle) @fold
-  (#set! role block))
-
-; ===== Parameter Lists =====
-(parameter_list
-  "(" @fold
-  ")" @fold
-  (#set! role arguments))
-
-; ===== Argument Lists =====
-(argument_list
-  "(" @fold
-  ")" @fold
-  (#set! role arguments))
+[
+  (function_definition)
+  (method_definition)
+  (object_definition)
+  (form_definition)
+  (frame_block)
+  (if_statement)
+  (do_loop)
+  (handle_statement)
+] @fold

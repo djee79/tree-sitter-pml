@@ -21,8 +21,8 @@ Comment after code
   (assignment
     (variable)
     (expression
-      (number)))
-  (comment))
+      (number))
+    (comment)))
 
 ==================
 Multiple comments

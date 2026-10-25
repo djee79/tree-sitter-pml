@@ -1,15 +1,15 @@
-package tree_sitter_aveva_pml_parser_test
+package tree_sitter_pml_test
 
 import (
 	"testing"
 
 	tree_sitter "github.com/tree-sitter/go-tree-sitter"
-	tree_sitter_aveva_pml_parser "github.com/tree-sitter/tree-sitter-aveva_pml_parser/bindings/go"
+	tree_sitter_pml "github.com/djee79/tree-sitter-pml/bindings/go"
 )
 
 func TestCanLoadGrammar(t *testing.T) {
-	language := tree_sitter.NewLanguage(tree_sitter_aveva_pml_parser.Language())
+	language := tree_sitter.NewLanguage(tree_sitter_pml.Language())
 	if language == nil {
-		t.Errorf("Error loading AvevaPmlParser grammar")
+		t.Errorf("Error loading PML grammar")
 	}
 }

@@ -1,0 +1,129 @@
+==================
+Exit statement
+==================
+
+exit
+
+---
+
+(source_file
+  (exit_statement
+    (keyword_exit)))
+
+==================
+Label and golabel
+==================
+
+label /start
+!x = !x + 1
+golabel /start
+
+---
+
+(source_file
+  (label_statement
+    (keyword_label)
+    (label_name))
+  (assignment
+    (variable)
+    (expression
+      (binary_expression
+        (expression
+          (variable))
+        (expression
+          (number)))))
+  (golabel_statement
+    (keyword_golabel)
+    (label_name)))
+
+==================
+Return error with code and message
+==================
+
+define method .fail()
+  return error 1 |Something went wrong|
+endmethod
+
+---
+
+(source_file
+  (method_definition
+    (keyword_define)
+    (keyword_method)
+    (method_identifier)
+    (parameter_list)
+    (return_statement
+      (keyword_return)
+      (keyword_error)
+      (number)
+      (string_literal))
+    (keyword_endmethod)))
+
+==================
+Return error with message only
+==================
+
+return error |Something went wrong|
+
+---
+
+(source_file
+  (return_statement
+    (keyword_return)
+    (keyword_error)
+    (string_literal)))
+
+==================
+Bare return error
+==================
+
+return error
+
+---
+
+(source_file
+  (return_statement
+    (keyword_return)
+    (keyword_error)))
+
+==================
+Assignment to indexed member
+==================
+
+!this.items[!i] = 'value'
+
+---
+
+(source_file
+  (assignment
+    (index_access
+      (expression
+        (member_access
+          (expression
+            (variable))
+          (identifier)))
+      (expression
+        (variable)))
+    (expression
+      (string_literal))))
+
+==================
+Assignment to method call result member
+==================
+
+!form.widget().value = 1
+
+---
+
+(source_file
+  (assignment
+    (member_access
+      (expression
+        (method_call
+          (expression
+            (variable))
+          (identifier)
+          (argument_list)))
+      (identifier))
+    (expression
+      (number))))

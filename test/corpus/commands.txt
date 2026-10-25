@@ -1,0 +1,359 @@
+==================
+Command line with words and element reference
+==================
+
+new equi /E-100
+
+---
+
+(source_file
+  (command_statement
+    (command_name)
+    (identifier)
+    (command_word)))
+
+==================
+Query command
+==================
+
+q var !x
+
+---
+
+(source_file
+  (command_statement
+    (command_name)
+    (identifier)
+    (variable)))
+
+==================
+Command with string argument
+==================
+
+using namespace 'Aveva.Core'
+
+---
+
+(source_file
+  (command_statement
+    (command_name)
+    (identifier)
+    (string_literal)))
+
+==================
+Command with parenthesised argument
+==================
+
+var !lst coll all (equi) for ce
+
+---
+
+(source_file
+  (var_statement
+    (keyword_var)
+    (variable)
+    (identifier)
+    (identifier)
+    (identifier)
+    (identifier)
+    (identifier)))
+
+==================
+Dollar directive command
+==================
+
+$M/C:/macros/run.mac
+
+---
+
+(source_file
+  (command_statement
+    (dollar_directive)))
+
+==================
+Element navigation line
+==================
+
+/PIPE-100
+
+---
+
+(source_file
+  (command_statement
+    (element_reference)))
+
+==================
+Output statement with text and variable
+==================
+
+$P the value is $!x and literal $$
+
+---
+
+(source_file
+  (output_statement
+    (output_directive)
+    (output_text)
+    (variable)
+    (output_text)
+    (dollar_escape)))
+
+==================
+Output statement with apostrophe
+==================
+
+$P it's done
+
+---
+
+(source_file
+  (output_statement
+    (output_directive)
+    (output_text)))
+
+==================
+Line continuation in command
+==================
+
+var !lst coll all equi wi name eq 'X' $
+    for ce
+
+---
+
+(source_file
+  (var_statement
+    (keyword_var)
+    (variable)
+    (identifier)
+    (identifier)
+    (identifier)
+    (identifier)
+    (identifier)
+    (identifier)
+    (string_literal)
+    (identifier)
+    (identifier)))
+
+==================
+Line continuation in expression
+==================
+
+!x = !a + $
+     !b
+
+---
+
+(source_file
+  (assignment
+    (variable)
+    (expression
+      (binary_expression
+        (expression
+          (variable))
+        (expression
+          (variable))))))
+
+==================
+Form setup block
+==================
+
+setup form !!myForm dialog dock left
+  title |My Form|
+  button .ok |OK| call |!this.okPressed()|
+  text .input |Name| width 20 is STRING
+exit
+
+---
+
+(source_file
+  (form_definition
+    (keyword_setup)
+    (keyword_form)
+    (variable)
+    (identifier)
+    (identifier)
+    (identifier)
+    (command_statement
+      (command_name)
+      (string_literal))
+    (command_statement
+      (command_name)
+      (command_word)
+      (string_literal)
+      (identifier)
+      (string_literal))
+    (command_statement
+      (command_name)
+      (command_word)
+      (string_literal)
+      (identifier)
+      (number)
+      (identifier)
+      (identifier))
+    (keyword_exit)))
+
+==================
+Keyword-prefixed identifiers are not keywords
+==================
+
+elsewhere 1 2
+!y = notify(1)
+!z = !equi.name
+
+---
+
+(source_file
+  (command_statement
+    (command_name)
+    (number)
+    (number))
+  (assignment
+    (variable)
+    (expression
+      (function_call
+        (identifier)
+        (argument_list
+          (expression
+            (number))))))
+  (assignment
+    (variable)
+    (expression
+      (member_access
+        (expression
+          (variable))
+        (identifier)))))
+
+==================
+Number with unit suffix
+==================
+
+!d = !pos.distance(!other) lt 10mm
+
+---
+
+(source_file
+  (assignment
+    (variable)
+    (expression
+      (comparison_expression
+        (expression
+          (method_call
+            (expression
+              (variable))
+            (identifier)
+            (argument_list
+              (expression
+                (variable)))))
+        (keyword_lt)
+        (expression
+          (number))))))
+
+==================
+Bare do with loop variable
+==================
+
+do !i
+  break if (!i gt 3)
+enddo
+
+---
+
+(source_file
+  (do_loop
+    (keyword_do)
+    (variable)
+    (break_statement
+      (keyword_break)
+      (keyword_if)
+      (expression
+        (parenthesized_expression
+          (expression
+            (comparison_expression
+              (expression
+                (variable))
+              (keyword_gt)
+              (expression
+                (number)))))))
+    (keyword_enddo)))
+
+==================
+Blank lines and comment lines inside blocks
+==================
+
+define method .m()
+
+  -- a comment
+
+  !x = 1
+
+endmethod
+
+---
+
+(source_file
+  (method_definition
+    (keyword_define)
+    (keyword_method)
+    (method_identifier)
+    (parameter_list)
+    (comment)
+    (assignment
+      (variable)
+      (expression
+        (number)))
+    (keyword_endmethod)))
+
+==================
+Error on one line does not spread
+==================
+
+!x = = 1
+!y = 2
+
+---
+
+(source_file
+  (assignment
+    (variable)
+    (ERROR)
+    (expression
+      (number)))
+  (assignment
+    (variable)
+    (expression
+      (number))))
+
+==================
+Uppercase keywords
+==================
+
+DEFINE METHOD .Run()
+  IF (!x EQ 1) THEN
+    RETURN
+  ENDIF
+ENDMETHOD
+
+---
+
+(source_file
+  (method_definition
+    (keyword_define)
+    (keyword_method)
+    (method_identifier)
+    (parameter_list)
+    (if_statement
+      (keyword_if)
+      (expression
+        (parenthesized_expression
+          (expression
+            (comparison_expression
+              (expression
+                (variable))
+              (keyword_eq)
+              (expression
+                (number))))))
+      (keyword_then)
+      (return_statement
+        (keyword_return))
+      (keyword_endif))
+    (keyword_endmethod)))

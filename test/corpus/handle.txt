@@ -1,0 +1,92 @@
+==================
+Handle any
+==================
+
+handle any
+  !x = 1
+endhandle
+
+---
+
+(source_file
+  (handle_statement
+    (keyword_handle)
+    (keyword_any)
+    (assignment
+      (variable)
+      (expression
+        (number)))
+    (keyword_endhandle)))
+
+==================
+Elsehandle any
+==================
+
+handle (2,751)
+  !x = 1
+elsehandle any
+  !x = 2
+endhandle
+
+---
+
+(source_file
+  (handle_statement
+    (keyword_handle)
+    (expression
+      (number))
+    (expression
+      (number))
+    (assignment
+      (variable)
+      (expression
+        (number)))
+    (keyword_elsehandle)
+    (keyword_any)
+    (assignment
+      (variable)
+      (expression
+        (number)))
+    (keyword_endhandle)))
+
+==================
+Elsehandle with error code list
+==================
+
+handle (2,751)
+  !x = 1
+elsehandle (41,56)
+  !x = 2
+elsehandle none
+  !x = 3
+endhandle
+
+---
+
+(source_file
+  (handle_statement
+    (keyword_handle)
+    (expression
+      (number))
+    (expression
+      (number))
+    (assignment
+      (variable)
+      (expression
+        (number)))
+    (keyword_elsehandle)
+    (expression
+      (number))
+    (expression
+      (number))
+    (assignment
+      (variable)
+      (expression
+        (number)))
+    (keyword_elsehandle)
+    (keyword_none)
+    (assignment
+      (variable)
+      (expression
+        (number)))
+    (keyword_endhandle)))

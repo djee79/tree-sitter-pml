@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    name: Generate, test, build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up tree-sitter CLI
+        uses: tree-sitter/setup-action/cli@v2
+        with:
+          tree-sitter-ref: v0.25.10
+
+      - name: Regenerate parser
+        run: tree-sitter generate
+
+      - name: Committed src/ must match grammar.js
+        run: git diff --exit-code -- src/
+
+      - name: Corpus and highlight tests
+        run: tree-sitter test
+
+      - name: Parse the examples in the README
+        run: |
+          awk '/^```pml$/{flag=1;next}/^```$/{flag=0}flag' README.md > /tmp/readme.pml || true
+          if [ -s /tmp/readme.pml ]; then tree-sitter parse /tmp/readme.pml --quiet; fi
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - name: Rust binding
+        run: cargo test

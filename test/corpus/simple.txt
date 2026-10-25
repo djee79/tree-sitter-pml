@@ -119,6 +119,7 @@ Dereferenced variable in index access
     (variable)
     (expression
       (index_access
-        (variable)
+        (expression
+          (variable))
         (expression
           (number))))))

@@ -1,4 +1,4 @@
-module github.com/tree-sitter/tree-sitter-aveva_pml_parser
+module github.com/djee79/tree-sitter-pml
 
 go 1.22
 

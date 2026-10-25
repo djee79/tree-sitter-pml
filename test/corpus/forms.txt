@@ -1,0 +1,266 @@
+==================
+Setup form with gadgets
+==================
+
+setup form !!myForm dialog dock left
+  title |My Form|
+  member .count is REAL
+  button .ok |OK| call |!this.okPressed()|
+  text .input |Name| width 20 is STRING
+exit
+
+---
+
+(source_file
+  (form_definition
+    (keyword_setup)
+    (keyword_form)
+    (variable)
+    (identifier)
+    (identifier)
+    (identifier)
+    (command_statement
+      (command_name)
+      (string_literal))
+    (member_definition
+      (keyword_member)
+      (member_name)
+      (keyword_is)
+      (type_identifier))
+    (command_statement
+      (command_name)
+      (command_word)
+      (string_literal)
+      (identifier)
+      (string_literal))
+    (command_statement
+      (command_name)
+      (command_word)
+      (string_literal)
+      (identifier)
+      (number)
+      (identifier)
+      (identifier))
+    (keyword_exit)))
+
+==================
+Layout form
+==================
+
+layout form !!myForm
+  title |My Form|
+exit
+
+---
+
+(source_file
+  (form_definition
+    (keyword_layout)
+    (keyword_form)
+    (variable)
+    (command_statement
+      (command_name)
+      (string_literal))
+    (keyword_exit)))
+
+==================
+Form with nested frame
+==================
+
+setup form !!f
+  frame .fr |Frame|
+    paragraph .label text |Hello|
+    frame .inner |Inner|
+      toggle .t |Flag|
+    exit
+  exit
+  button .ok |OK|
+exit
+
+---
+
+(source_file
+  (form_definition
+    (keyword_setup)
+    (keyword_form)
+    (variable)
+    (frame_block
+      (keyword_frame)
+      (command_word)
+      (string_literal)
+      (command_statement
+        (command_name)
+        (command_word)
+        (identifier)
+        (string_literal))
+      (frame_block
+        (keyword_frame)
+        (command_word)
+        (string_literal)
+        (command_statement
+          (command_name)
+          (command_word)
+          (string_literal))
+        (keyword_exit))
+      (keyword_exit))
+    (command_statement
+      (command_name)
+      (command_word)
+      (string_literal))
+    (keyword_exit)))
+
+==================
+Form with menu and bar
+==================
+
+setup form !!f
+  bar
+    add 'File' .file
+  exit
+  menu .file
+    add 'Save' 'callback'
+  exit
+exit
+
+---
+
+(source_file
+  (form_definition
+    (keyword_setup)
+    (keyword_form)
+    (variable)
+    (frame_block
+      (keyword_bar)
+      (command_statement
+        (command_name)
+        (string_literal)
+        (command_word))
+      (keyword_exit))
+    (frame_block
+      (keyword_menu)
+      (command_word)
+      (command_statement
+        (command_name)
+        (string_literal)
+        (string_literal))
+      (keyword_exit))
+    (keyword_exit)))
+
+==================
+Form with view blocks
+==================
+
+setup form !!f
+  view .vol graphics
+    height 30
+  exit
+  alpha view .out
+    height 10
+  exit
+exit
+
+---
+
+(source_file
+  (form_definition
+    (keyword_setup)
+    (keyword_form)
+    (variable)
+    (frame_block
+      (keyword_view)
+      (command_word)
+      (identifier)
+      (command_statement
+        (command_name)
+        (number))
+      (keyword_exit))
+    (frame_block
+      (keyword_alpha)
+      (keyword_view)
+      (command_word)
+      (command_statement
+        (command_name)
+        (number))
+      (keyword_exit))
+    (keyword_exit)))
+
+==================
+Form with assignments and methods after it
+==================
+
+setup form !!f dialog
+  !this.initCall = '!this.init()'
+  text .name |Name| width 20 is STRING
+exit
+
+define method .init()
+  !this.name.val = 'x'
+endmethod
+
+---
+
+(source_file
+  (form_definition
+    (keyword_setup)
+    (keyword_form)
+    (variable)
+    (identifier)
+    (assignment
+      (member_access
+        (expression
+          (variable))
+        (identifier))
+      (expression
+        (string_literal)))
+    (command_statement
+      (command_name)
+      (command_word)
+      (string_literal)
+      (identifier)
+      (number)
+      (identifier)
+      (identifier))
+    (keyword_exit))
+  (method_definition
+    (keyword_define)
+    (keyword_method)
+    (method_identifier)
+    (parameter_list)
+    (assignment
+      (member_access
+        (expression
+          (member_access
+            (expression
+              (variable))
+            (identifier)))
+        (identifier))
+      (expression
+        (string_literal)))
+    (keyword_endmethod)))
+
+==================
+Exit statement outside a form
+==================
+
+do !i from 1 to 3
+  exit
+enddo
+exit
+
+---
+
+(source_file
+  (do_loop
+    (keyword_do)
+    (variable)
+    (keyword_from)
+    (expression
+      (number))
+    (keyword_to)
+    (expression
+      (number))
+    (exit_statement
+      (keyword_exit))
+    (keyword_enddo))
+  (exit_statement
+    (keyword_exit)))

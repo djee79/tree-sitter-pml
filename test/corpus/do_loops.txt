@@ -1,0 +1,188 @@
+==================
+Do loop index form
+==================
+
+do !i index !arr
+  !x = !arr[!i]
+enddo
+
+---
+
+(source_file
+  (do_loop
+    (keyword_do)
+    (variable)
+    (keyword_index)
+    (expression
+      (variable))
+    (assignment
+      (variable)
+      (expression
+        (index_access
+          (expression
+            (variable))
+          (expression
+            (variable)))))
+    (keyword_enddo)))
+
+==================
+Do loop values form
+==================
+
+do !item values !arr
+  !x = !item
+enddo
+
+---
+
+(source_file
+  (do_loop
+    (keyword_do)
+    (variable)
+    (keyword_values)
+    (expression
+      (variable))
+    (assignment
+      (variable)
+      (expression
+        (variable)))
+    (keyword_enddo)))
+
+==================
+Do loop to without from
+==================
+
+do !i to 10
+  !x = !i
+enddo
+
+---
+
+(source_file
+  (do_loop
+    (keyword_do)
+    (variable)
+    (keyword_to)
+    (expression
+      (number))
+    (assignment
+      (variable)
+      (expression
+        (variable)))
+    (keyword_enddo)))
+
+==================
+Do loop from without to
+==================
+
+do !i from 5
+  break if (!i gt 10)
+enddo
+
+---
+
+(source_file
+  (do_loop
+    (keyword_do)
+    (variable)
+    (keyword_from)
+    (expression
+      (number))
+    (break_statement
+      (keyword_break)
+      (keyword_if)
+      (expression
+        (parenthesized_expression
+          (expression
+            (comparison_expression
+              (expression
+                (variable))
+              (keyword_gt)
+              (expression
+                (number)))))))
+    (keyword_enddo)))
+
+==================
+Do loop without variable
+==================
+
+do from 1 to 3
+  !x = 1
+enddo
+
+---
+
+(source_file
+  (do_loop
+    (keyword_do)
+    (keyword_from)
+    (expression
+      (number))
+    (keyword_to)
+    (expression
+      (number))
+    (assignment
+      (variable)
+      (expression
+        (number)))
+    (keyword_enddo)))
+
+==================
+Bare do loop with break
+==================
+
+do
+  !x = !x + 1
+  break if (!x gt 5)
+enddo
+
+---
+
+(source_file
+  (do_loop
+    (keyword_do)
+    (assignment
+      (variable)
+      (expression
+        (binary_expression
+          (expression
+            (variable))
+          (expression
+            (number)))))
+    (break_statement
+      (keyword_break)
+      (keyword_if)
+      (expression
+        (parenthesized_expression
+          (expression
+            (comparison_expression
+              (expression
+                (variable))
+              (keyword_gt)
+              (expression
+                (number)))))))
+    (keyword_enddo)))
+
+==================
+Bare break statement
+==================
+
+do !i from 1 to 10
+  break
+enddo
+
+---
+
+(source_file
+  (do_loop
+    (keyword_do)
+    (variable)
+    (keyword_from)
+    (expression
+      (number))
+    (keyword_to)
+    (expression
+      (number))
+    (break_statement
+      (keyword_break))
+    (keyword_enddo)))

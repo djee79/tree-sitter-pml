@@ -1,0 +1,257 @@
+==================
+Multiplication binds tighter than addition
+==================
+
+!x = 1 + 2 * 3
+
+---
+
+(source_file
+  (assignment
+    (variable)
+    (expression
+      (binary_expression
+        (expression
+          (number))
+        (expression
+          (binary_expression
+            (expression
+              (number))
+            (expression
+              (number))))))))
+
+==================
+Concatenation binds looser than arithmetic
+==================
+
+!x = 'a' & !b + 1
+
+---
+
+(source_file
+  (assignment
+    (variable)
+    (expression
+      (binary_expression
+        (expression
+          (string_literal))
+        (expression
+          (binary_expression
+            (expression
+              (variable))
+            (expression
+              (number))))))))
+
+==================
+Comparison binds looser than arithmetic
+==================
+
+!x = !a + 1 gt 2
+
+---
+
+(source_file
+  (assignment
+    (variable)
+    (expression
+      (comparison_expression
+        (expression
+          (binary_expression
+            (expression
+              (variable))
+            (expression
+              (number))))
+        (keyword_gt)
+        (expression
+          (number))))))
+
+==================
+Comparison with ge and le
+==================
+
+!x = !a ge !b
+!y = !a le !b
+
+---
+
+(source_file
+  (assignment
+    (variable)
+    (expression
+      (comparison_expression
+        (expression
+          (variable))
+        (keyword_ge)
+        (expression
+          (variable)))))
+  (assignment
+    (variable)
+    (expression
+      (comparison_expression
+        (expression
+          (variable))
+        (keyword_le)
+        (expression
+          (variable))))))
+
+==================
+Symbolic comparison operators
+==================
+
+!a = !x > 1
+!b = !x < 1
+!c = !x >= 1
+!d = !x <= 1
+!e = !x == 1
+!f = !x <> 1
+!g = !x != 1
+
+---
+
+(source_file
+  (assignment
+    (variable)
+    (expression
+      (comparison_expression
+        (expression
+          (variable))
+        (expression
+          (number)))))
+  (assignment
+    (variable)
+    (expression
+      (comparison_expression
+        (expression
+          (variable))
+        (expression
+          (number)))))
+  (assignment
+    (variable)
+    (expression
+      (comparison_expression
+        (expression
+          (variable))
+        (expression
+          (number)))))
+  (assignment
+    (variable)
+    (expression
+      (comparison_expression
+        (expression
+          (variable))
+        (expression
+          (number)))))
+  (assignment
+    (variable)
+    (expression
+      (comparison_expression
+        (expression
+          (variable))
+        (expression
+          (number)))))
+  (assignment
+    (variable)
+    (expression
+      (comparison_expression
+        (expression
+          (variable))
+        (expression
+          (number)))))
+  (assignment
+    (variable)
+    (expression
+      (comparison_expression
+        (expression
+          (variable))
+        (expression
+          (number))))))
+
+==================
+Unary minus on variable
+==================
+
+!x = -!a
+
+---
+
+(source_file
+  (assignment
+    (variable)
+    (expression
+      (unary_expression
+        (expression
+          (variable))))))
+
+==================
+Unary minus on parenthesized expression
+==================
+
+!x = -(!a + 1)
+
+---
+
+(source_file
+  (assignment
+    (variable)
+    (expression
+      (unary_expression
+        (expression
+          (parenthesized_expression
+            (expression
+              (binary_expression
+                (expression
+                  (variable))
+                (expression
+                  (number))))))))))
+
+==================
+Unary plus
+==================
+
+!x = +!a
+
+---
+
+(source_file
+  (assignment
+    (variable)
+    (expression
+      (unary_expression
+        (expression
+          (variable))))))
+
+==================
+Negative number literal
+==================
+
+!x = -5
+
+---
+
+(source_file
+  (assignment
+    (variable)
+    (expression
+      (number))))
+
+==================
+Not binds tighter than and
+==================
+
+!x = not !a and !b
+
+---
+
+(source_file
+  (assignment
+    (variable)
+    (expression
+      (logical_expression
+        (expression
+          (logical_expression
+            (keyword_not)
+            (expression
+              (variable))))
+        (keyword_and)
+        (expression
+          (variable))))))
